@@ -1,0 +1,19 @@
+# sources:
+# http://www.jgoodwin.net/?p=1223
+# http://orgtheory.wordpress.com/2012/05/16/the-fragile-network-of-econ-soc-readings/
+# http://nealcaren.web.unc.edu/a-sociology-citation-network/
+
+# go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
+# refine search by journal... perhaps archaeolog* in 'publication title', hit 'search'
+# click 'web of science' tab at the top
+
+# scroll to bottom of search results, where 'Output Records' section is
+# Step 1: Select records -> 1-500 since 500 is max 
+# Step 2: Select content -> Full Record & Cited References
+# Step 3: Select destination -> save to plain text
+
+# Once we've got the data, use or adapt this python script
+# http://www.unc.edu/~ncaren/cite_network/citenet.py
+# and note the endnote here: http://www.jgoodwin.net/?p=1223
+
+# then make network diagrams and calculate typical sna stats...
