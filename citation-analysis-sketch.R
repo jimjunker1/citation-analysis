@@ -5,12 +5,6 @@
 # http://kieranhealy.org/blog/archives/2014/11/15/top-ten-by-decade/
 # http://www.jgoodwin.net/lit-cites.png
 
-# go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
-# refine search by journal... perhaps archaeolog* OR antiquity OR archeolog* in 'publication title', 
-# 
-# hit 'search'
-# must have <10k results to enable citation data
-# click 'create citation report' tab at the top
 
 ###########################################################################
 vignette('RSelenium-basics')
