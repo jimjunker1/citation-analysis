@@ -17,7 +17,8 @@ remDr$open()
 # go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
 # refine search by journal... perhaps arch?eolog* in 'publication title'
 # then: 'Research Areas' -> archaeology -> refine
-# then: 'Document types' -> article 
+# then: 'Document types' -> article -> refine
+# then: 'Source title' -> choose your favourite journals -> refine
 # must have <10k results to enable citation data
 # click 'create citation report' tab at the top
 # do the first page manually to set the 'save file' and 'do this automatically', 
