@@ -4,15 +4,17 @@
 # http://nealcaren.web.unc.edu/a-sociology-citation-network/
 
 # go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
-# refine search by journal... perhaps archaeolog* OR antiquity OR *archeolog* in 'publication title', 
+# refine search by journal... perhaps archaeolog* OR antiquity OR archeolog* in 'publication title', 
+# 
 # refine to last 10 years only
 # hit 'search'
 # must have <10k results to enable citation data
 # click 'create citation report' tab at the top
 
+# if working manually: 
 # scroll to bottom of search results, where 'Output Records' section is
 # Step 1: Select records -> 1-500 since 500 is max 
-# Step 2: Select content -> Full Record & Cited References
+# Step 2: Select content -> Full Record & Cited References (this seems to have changed)
 # Step 3: Select destination -> save to plain text
 
 # Once we've got the data, use or adapt this python script
@@ -31,7 +33,7 @@ library(RSelenium)
 remDr <- remoteDriver()
 remDr$open()
 # go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
-# refine search by journal... perhaps archaeolog* OR antiquity OR *archeolog* in 'publication title', 
+# refine search by journal... perhaps archaeolog* OR antiquity OR archeolog* in 'publication title', 
 # document type: article (must have <10k results to enable citation data)
 # click 'create citation report' tab at the top
 # get URL of first page and paste in next line
@@ -40,14 +42,24 @@ remDr$navigate("http://apps.webofknowledge.com/CitationReport.do?product=UA&sear
 
 # Loop to get citation data for each page of results, each iteration will save a txt file
 for(i in 1:610){
-webElem <- remDr$findElement(using = 'id', value = "select2-chosen-1")
+  # click on 'save to text file'
+  result <- try(
+  webElem <- remDr$findElement(using = 'id', value = "select2-chosen-1")
+  ); if(class(result) == "try-error") next;
 webElem$clickElement()
-webElem <- remDr$findElement(using = "css", "span.quickoutput-action")
+  # click on 'send' on pop-up window
+  result <- try(
+  webElem <- remDr$findElement(using = "css", "span.quickoutput-action")
+   ); if(class(result) == "try-error") next;
 webElem$clickElement()
+  # refresh the page to get rid of the pop-up
 remDr$refresh()
-webElem <- remDr$findElement(using = 'xpath', value = "(//form[@id='summary_navigation']/table/tbody/tr/td[3]/a/i)[2]")
+  # advance to the next page of results
+result <- try(
+  webElem <- remDr$findElement(using = 'xpath', value = "(//form[@id='summary_navigation']/table/tbody/tr/td[3]/a/i)[2]")
+  ); if(class(result) == "try-error") next;
 webElem$clickElement()
-print(i)
+print(i) 
 }
 
 
