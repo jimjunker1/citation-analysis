@@ -12,7 +12,8 @@
 # must have <10k results to enable citation data
 # click 'create citation report' tab at the top
 
-####vignette('RSelenium-basics')
+###########################################################################
+vignette('RSelenium-basics')
 # setup broswer and selenium
 library(RSelenium)
 checkForServer()
@@ -100,8 +101,10 @@ my_df <- merge(my_df, dat1, by = 'Publication.Year')
 
 df_top <- my_df[ave(-my_df$Total.Citations, my_df$decade, FUN = rank) <= 10, ] 
 
+
+
 # Draw the plot...
-# code from from Jonathan Goodwin <joncgoodwin@gmail.com>
+######## plotting code from from Jonathan Goodwin <joncgoodwin@gmail.com> #######
 # format of data: title,cites,group,journal
 # THE WRITERS AUDIENCE IS ALWAYS A FICTION,205,1974-1979,PMLA
 
@@ -130,7 +133,7 @@ g <- g + geom_text(size=4) +
 g #adjust sizing, etc.
 
 
-
+###################################################################################
 
 
 
