@@ -36,6 +36,7 @@ remDr$open()
 # click 'create citation report' tab at the top
 # get URL of first page and paste in next line
 remDr$navigate("http://apps.webofknowledge.com/CitationReport.do?product=UA&search_mode=CitationReport&SID=4Fyz44lRVFdkcFexHMz&page=1&cr_pqid=5&viewType=summary")
+# do the first page manually to set the 'save file' and 'do this automatically', then let loop do the work after that
 
 # Loop to get citation data for each page of results, each iteration will save a txt file
 for(i in 1:610){
@@ -48,5 +49,6 @@ webElem <- remDr$findElement(using = 'xpath', value = "(//form[@id='summary_navi
 webElem$clickElement()
 print(i)
 }
+
 
 
