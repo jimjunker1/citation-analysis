@@ -108,7 +108,7 @@ df_top <- my_df[ave(-my_df$Total.Citations, my_df$decade, FUN = rank) <= 10, ]
 ######## plotting code from from Jonathan Goodwin ##########
 ######## http://jgoodwin.net/ joncgoodwin@gmail.com ########
 
-# format of data: title,cites,group,journal
+# format of data: Title, Total.Citations, decade, Source.Title
 # THE WRITERS AUDIENCE IS ALWAYS A FICTION,205,1974-1979,PMLA
 
 library(ggplot2)
