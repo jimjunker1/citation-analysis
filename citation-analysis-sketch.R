@@ -12,8 +12,7 @@
 # must have <10k results to enable citation data
 # click 'create citation report' tab at the top
 
-####
-vignette('RSelenium-basics')
+####vignette('RSelenium-basics')
 # setup broswer and selenium
 library(RSelenium)
 checkForServer()
@@ -21,13 +20,19 @@ startServer()
 remDr <- remoteDriver()
 remDr$open()
 # go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
-# refine search by journal... perhaps archaeolog* OR antiquity OR *archeolog* in 'publication title', 
-# document type: article (must have <10k results to enable citation data)
+# refine search by journal... perhaps arch?eolog* in 'publication title'
+# then: 'Research Areas' -> archaeology -> refine
+# then: 'Document types' -> article 
+# must have <10k results to enable citation data
 # click 'create citation report' tab at the top
-# get URL of first page and paste in next line
-remDr$navigate("http://apps.webofknowledge.com/CitationReport.do?product=UA&search_mode=CitationReport&SID=4CvyYFKm3SC44hNsA2w&page=1&cr_pqid=7&viewType=summary")
-# do the first page manually to set the 'save file' and 'do this automatically', then let loop do the work after that
+# do the first page manually to set the 'save file' and 'do this automatically', 
+# then let loop do the work after that
 
+# before running the loop, get URL of first page that we already saved,
+# and paste in next line
+remDr$navigate("http://apps.webofknowledge.com/CitationReport.do?product=UA&search_mode=CitationReport&SID=4CvyYFKm3SC44hNsA2w&page=1&cr_pqid=7&viewType=summary")
+
+# Here's the loop to automate collecting data from the next 600-odd pages...
 # Loop to get citation data for each page of results, each iteration will save a txt file
 for(i in 1:1000){
   # click on 'save to text file'
@@ -50,7 +55,7 @@ webElem$clickElement()
 print(i) 
 }
 
-### get all text files into R
+### get all text files into R (move them manually into a folder of their own)
 setwd("/home/two/Downloads/WoS")
 # get text file names
 my_files <- list.files(pattern = ".txt")
@@ -95,7 +100,8 @@ my_df <- merge(my_df, dat1, by = 'Publication.Year')
 
 df_top <- my_df[ave(-my_df$Total.Citations, my_df$decade, FUN = rank) <= 10, ] 
 
-# from Jonathan Goodwin <joncgoodwin@gmail.com>
+# Draw the plot...
+# code from from Jonathan Goodwin <joncgoodwin@gmail.com>
 # format of data: title,cites,group,journal
 # THE WRITERS AUDIENCE IS ALWAYS A FICTION,205,1974-1979,PMLA
 
@@ -122,6 +128,8 @@ g <- g + geom_text(size=4) +
   scale_colour_discrete(name="Journals")
 
 g #adjust sizing, etc.
+
+
 
 
 
