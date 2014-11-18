@@ -13,7 +13,6 @@
 # click 'create citation report' tab at the top
 
 ####
-# Attempting to automate WoS data collection with RSelenium...
 vignette('RSelenium-basics')
 # setup broswer and selenium
 RSelenium::checkForServer()
@@ -22,16 +21,15 @@ library(RSelenium)
 remDr <- remoteDriver()
 remDr$open()
 # go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
-# refine search by journal... perhaps archaeolog* OR antiquity OR archeolog* in 'publication title', 
+# refine search by journal... perhaps archaeolog* OR antiquity OR *archeolog* in 'publication title', 
 # document type: article (must have <10k results to enable citation data)
 # click 'create citation report' tab at the top
 # get URL of first page and paste in next line
-remDr$navigate("http://apps.webofknowledge.com/CitationReport.do?product=UA&search_mode=CitationReport&SID=4Fyz44lRVFdkcFexHMz&page=1&cr_pqid=5&viewType=summary")
+remDr$navigate("http://apps.webofknowledge.com/summary.do?product=UA&parentProduct=UA&search_mode=CitationReport&parentQid=3&qid=4&SID=2FMbuFLDiHkqsx9qUdl&&update_back2search_link_param=yes&page=1")
 # do the first page manually to set the 'save file' and 'do this automatically', then let loop do the work after that
 
 # Loop to get citation data for each page of results, each iteration will save a txt file
-# error handling allows the loop to continue if an element can't be found on the page
-for(i in 1:610){
+for(i in 1:1000){
   # click on 'save to text file'
   result <- try(
   webElem <- remDr$findElement(using = 'id', value = "select2-chosen-1")
@@ -51,6 +49,46 @@ result <- try(
 webElem$clickElement()
 print(i) 
 }
+
+### get all text files into R
+setwd("/home/two/Downloads/WoS")
+# get text file names
+my_files <- list.files(pattern = ".txt")
+# make list object to store all text files in R
+my_list <- vector(mode = "list", length = length(my_files))
+# loop over file names and read each file into the list
+my_list <- lapply(seq(my_files), function(i) read.csv(my_files[i], 
+                                                      skip = 4, 
+                                                      header = TRUE,                            
+                                                      comment.char = " "))
+# check to see it worked
+my_list[1:5]
+
+## combine list of dataframes into one big dataframe
+# use data.table for speed
+library(data.table)
+my_df <- rbindlist(my_list)
+setkey(my_df)
+# filter only a few columns to simplify
+my_cols <- c('Title', 'Publication.Year', 'Total.Citations', 'Source.Title')
+my_df <- my_df[,my_cols, with=FALSE]
+# remove duplicates
+my_df <- unique(my_df)
+
+## create new column that is 'decade'
+# first make a lookup table to get a decade for each individual year
+year1 <- 1900:2050
+my_seq <- seq(year1[1], year1[length(year1)], by = 10)
+indx <- findInterval(year1, my_seq)
+ind <- seq(1, length(my_seq), by = 1)
+labl1 <- paste(my_seq[ind], my_seq[ind + 1], sep = "-")[-42]
+dat1 <- data.table(data.frame(Publication.Year = year1, decade = labl1[indx], stringsAsFactors = FALSE))
+setkey(dat1, 'Publication.Year')
+# merge the decade column onto my_df
+my_df <- merge(my_df, dat1, by = 'Publication.Year')
+
+## find the most cited paper by decade of publication
+
 
 
 
