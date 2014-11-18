@@ -2,26 +2,15 @@
 # http://www.jgoodwin.net/?p=1223
 # http://orgtheory.wordpress.com/2012/05/16/the-fragile-network-of-econ-soc-readings/
 # http://nealcaren.web.unc.edu/a-sociology-citation-network/
+# http://kieranhealy.org/blog/archives/2014/11/15/top-ten-by-decade/
+# http://www.jgoodwin.net/lit-cites.png
 
 # go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
 # refine search by journal... perhaps archaeolog* OR antiquity OR archeolog* in 'publication title', 
 # 
-# refine to last 10 years only
 # hit 'search'
 # must have <10k results to enable citation data
 # click 'create citation report' tab at the top
-
-# if working manually: 
-# scroll to bottom of search results, where 'Output Records' section is
-# Step 1: Select records -> 1-500 since 500 is max 
-# Step 2: Select content -> Full Record & Cited References (this seems to have changed)
-# Step 3: Select destination -> save to plain text
-
-# Once we've got the data, use or adapt this python script
-# http://www.unc.edu/~ncaren/cite_network/citenet.py
-# and note the endnote here: http://www.jgoodwin.net/?p=1223
-
-# then make network diagrams and calculate typical sna stats...
 
 ####
 # Attempting to automate WoS data collection with RSelenium...
@@ -64,4 +53,16 @@ print(i)
 }
 
 
+
+# if working manually: 
+# scroll to bottom of search results, where 'Output Records' section is
+# Step 1: Select records -> 1-500 since 500 is max 
+# Step 2: Select content -> Full Record & Cited References (this seems to have changed)
+# Step 3: Select destination -> save to plain text
+
+# Once we've got the data, use or adapt this python script
+# http://www.unc.edu/~ncaren/cite_network/citenet.py
+# and note the endnote here: http://www.jgoodwin.net/?p=1223
+
+# then make network diagrams and calculate typical sna stats...
 
