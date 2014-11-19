@@ -21,7 +21,7 @@ startServer()
 remDr <- remoteDriver()
 remDr$open()
 # go to http://apps.webofknowledge.com.offcampus.lib.washington.edu/
-# refine search by journal... perhaps arch?eolog* in 'publication title'
+# refine search by journal... perhaps arch?eolog* in 'topic'
 # then: 'Research Areas' -> archaeology -> refine
 # then: 'Document types' -> article -> refine
 # then: 'Source title' -> choose your favourite journals -> refine
