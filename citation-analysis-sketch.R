@@ -174,6 +174,24 @@ g <- g + geom_text(size = 4) +
 
 g #adjust sizing, etc.
 
+######## a few other plots #################
+
+# distribution of citations over time (by year)
+ggplot(my_df, aes(Publication.Year)) +
+  geom_histogram() +
+  theme_bw(base_family="Helvetica")
+
+# distribution of citations over time (by decade)
+ggplot(my_df, aes(decade)) +
+  geom_histogram() +
+  theme_bw(base_family="Helvetica")
+
+# distribution of citations over time (by decade, by journal)
+ggplot(my_df, aes(decade, fill = short_title)) +
+  geom_histogram(binwidth=.5, position="dodge") + 
+  theme_bw(base_family="Helvetica")
+
+
 
 ###################################################################################
 
