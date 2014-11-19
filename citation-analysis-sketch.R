@@ -7,8 +7,14 @@
 
 
 ###########################################################################
+# This first section scrapes content from the Web of Science webpage. It takes
+# a little bit of setting up and clicking around, then the loop takes care of
+# the time-consuming bit. I used Ubuntu 14.04 to do this (not on a VM)
+
 vignette('RSelenium-basics')
 # setup broswer and selenium
+library(devtools)
+install_github("ropensci/rselenium")
 library(RSelenium)
 checkForServer()
 startServer()
@@ -33,23 +39,31 @@ remDr$navigate("http://apps.webofknowledge.com/CitationReport.do?product=UA&sear
 for(i in 1:1000){
   # click on 'save to text file'
   result <- try(
-  webElem <- remDr$findElement(using = 'id', value = "select2-chosen-1")
+    webElem <- remDr$findElement(using = 'id', value = "select2-chosen-1")
   ); if(class(result) == "try-error") next;
-webElem$clickElement()
+  webElem$clickElement()
   # click on 'send' on pop-up window
   result <- try(
-  webElem <- remDr$findElement(using = "css", "span.quickoutput-action")
-   ); if(class(result) == "try-error") next;
-webElem$clickElement()
-  # refresh the page to get rid of the pop-up
-remDr$refresh()
-  # advance to the next page of results
-result <- try(
-  webElem <- remDr$findElement(using = 'xpath', value = "(//form[@id='summary_navigation']/table/tbody/tr/td[3]/a/i)[2]")
+    webElem <- remDr$findElement(using = "css", "span.quickoutput-action")
   ); if(class(result) == "try-error") next;
-webElem$clickElement()
-print(i) 
+  webElem$clickElement()
+  # refresh the page to get rid of the pop-up
+  remDr$refresh()
+  # advance to the next page of results
+  result <- try(
+    webElem <- remDr$findElement(using = 'xpath', value = "(//form[@id='summary_navigation']/table/tbody/tr/td[3]/a/i)[2]")
+  ); if(class(result) == "try-error") next;
+  webElem$clickElement()
+  print(i) 
 }
+
+# From here I used a docker container to improve reproducibility and isolation 
+# of the analysis. More specifically, I used boot2docker to run docker on Windows
+# then ran the rocker/hadleyverse container with a shared folder to my deskstop
+# the exact line to enter this container is: 
+# docker run -d -p 8787:8787 -v /c/Users/marwick:/home/rstudio/ rocker/hadleyverse
+# you'll need to change 'c/Users/marwick' to whatever is equivalent on your machine
+# more details: https://github.com/rocker-org/rocker/wiki
 
 # text files collected by this loop can be found here:
 # https://drive.google.com/folderview?id=0B87CmPqGXTzldk9QMUlnU0FZYlU&usp=sharing
@@ -73,6 +87,7 @@ my_list[1:5]
 
 ## combine list of dataframes into one big dataframe
 # use data.table for speed
+install_github("rdatatable/data.table")
 library(data.table)
 my_df <- rbindlist(my_list)
 setkey(my_df)
@@ -84,6 +99,29 @@ my_df <- unique(my_df)
 # what journals do we have?
 unique(my_df$Source.Title)
 
+## make abbreviations for journal names, make article titles all upper case
+# get names
+long_titles <- as.character(unique(my_df$Source.Title))
+# get abbreviations automatically, perhaps not the obvious ones, but it's fast
+short_titles <- unname(sapply(long_titles, function(i){
+  theletters = strsplit(i,'')[[1]]
+  wh = c(1,which(theletters  == ' ') + 1)
+  theletters[wh]
+  paste(theletters[wh],collapse='') 
+}))
+# manually disambiguate the journals that now only have 'A' as the short name                         
+short_titles[short_titles == "A"] <- c("AMTRY", "ANTQ", "ARCH")
+# remove 'NA' so it's not confused with an actual journal
+short_titles[short_titles == "NA"] <- ""
+# add abbreviations to big table
+journals <- data.table(Source.Title = long_titles, 
+                       short_title = short_titles)
+setkey(journals) # need a key to merge
+my_df <- merge(my_df, journals, by = 'Source.Title')
+# make article titles all upper case, easier to read
+my_df$Title <- toupper(my_df$Title)
+
+                         
 ## create new column that is 'decade'
 # first make a lookup table to get a decade for each individual year
 year1 <- 1900:2050
@@ -102,7 +140,7 @@ my_df <- merge(my_df, dat1, by = 'Publication.Year')
 
 df_top <- my_df[ave(-my_df$Total.Citations, my_df$decade, FUN = rank) <= 10, ] 
 
-
+# inspecting this df_top table is quite interesting.
 
 # Draw the plot...
 
@@ -118,13 +156,13 @@ ws <- df_top
 ws <-  ws[order(ws$decade,-ws$Total.Citations),]
 ws$Title <- factor(ws$Title, levels = unique(ws$Title)) #to preserve order in plot, maybe there's another way to do this
 
-g <- ggplot(ws, aes(x=Total.Citations, 
-                    y=Title, 
-                    label=Source.Title, 
-                    group=decade, 
-                    colour=Source.Title))
+g <- ggplot(ws, aes(x = Total.Citations, 
+                    y = Title, 
+                    label = short_title, 
+                    group = decade, 
+                    colour = short_title))
 
-g <- g + geom_text(size=4) + 
+g <- g + geom_text(size = 4) + 
   facet_grid (decade ~.,
               drop=TRUE,
               scales="free_y") + 
@@ -138,6 +176,7 @@ g #adjust sizing, etc.
 
 
 ###################################################################################
+
 
 
 
