@@ -175,24 +175,35 @@ g <- g + geom_text(size = 4) +
 g #adjust sizing, etc.
 
 ######## a few other plots #################
+library(scales)
 
 # distribution of citations over time (by year)
 ggplot(my_df, aes(Publication.Year)) +
-  geom_histogram() +
+  geom_bar() +
   theme_bw(base_family="Helvetica")
 
 # distribution of citations over time (by decade)
 ggplot(my_df, aes(decade)) +
-  geom_histogram() +
+  geom_bar() +
   theme_bw(base_family="Helvetica")
 
 # distribution of citations over time (by decade, by journal)
 ggplot(my_df, aes(decade, fill = short_title)) +
-  geom_histogram(binwidth=.5, position="dodge") + 
+  geom_bar(binwidth=.5, position="dodge") + 
   theme_bw(base_family="Helvetica")
 
+# distribution of citations within each year
+ggplot(my_df, aes(factor(Publication.Year), Total.Citations)) +
+  geom_boxplot() + 
+  theme_bw(base_family="Helvetica") +  
+  theme(axis.text.x  = element_text(angle=90, vjust=0.5, size=16)) +
+  scale_y_continuous(trans=log2_trans())
 
-
+# distribution of citations within each decade
+ggplot(my_df, aes(decade, Total.Citations)) +
+  geom_boxplot() + 
+  scale_y_continuous(trans=log2_trans()) + 
+  theme_bw(base_family="Helvetica") 
 ###################################################################################
 
 
