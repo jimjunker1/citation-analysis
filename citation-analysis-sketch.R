@@ -51,6 +51,12 @@ webElem$clickElement()
 print(i) 
 }
 
+# text files collected by this loop can be found here:
+# https://drive.google.com/folderview?id=0B87CmPqGXTzldk9QMUlnU0FZYlU&usp=sharing
+# there are many duplicates, but the code below will remove them
+# copy the folder to your hard drive, and edit the setwd line below
+# to match the location of your folder containing the hundreds of text files.
+
 ### get all text files into R (move them manually into a folder of their own)
 setwd("/home/two/Downloads/WoS")
 # get text file names
