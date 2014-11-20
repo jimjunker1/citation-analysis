@@ -204,6 +204,10 @@ ggplot(my_df, aes(decade, Total.Citations)) +
   geom_boxplot() + 
   scale_y_continuous(trans=log2_trans()) + 
   theme_bw(base_family="Helvetica") 
+  
+fivenum(my_df$Total.Citations) 
+# minimum, lower-hinge, median, upper-hinge, maximum
+
 ###################################################################################
 
 
