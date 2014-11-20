@@ -177,17 +177,17 @@ g #adjust sizing, etc.
 ######## a few other plots #################
 library(scales)
 
-# distribution of citations over time (by year)
+# distribution of papers over time (by year)
 ggplot(my_df, aes(Publication.Year)) +
   geom_bar() +
   theme_bw(base_family="Helvetica")
 
-# distribution of citations over time (by decade)
+# distribution of papers over time (by decade)
 ggplot(my_df, aes(decade)) +
   geom_bar() +
   theme_bw(base_family="Helvetica")
 
-# distribution of citations over time (by decade, by journal)
+# distribution of papers over time (by decade, by journal)
 ggplot(my_df, aes(decade, fill = short_title)) +
   geom_bar(binwidth=.5, position="dodge") + 
   theme_bw(base_family="Helvetica")
