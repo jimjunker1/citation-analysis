@@ -4,18 +4,30 @@
 # http://nealcaren.web.unc.edu/a-sociology-citation-network/
 # http://kieranhealy.org/blog/archives/2014/11/15/top-ten-by-decade/
 # http://www.jgoodwin.net/lit-cites.png
-
+# Original code forked from https://gist.github.com/benmarwick/5826552
+# modified for analyzing freshwater ecology citations by Jim Junker
 
 ###########################################################################
 # This first section scrapes content from the Web of Science webpage. It takes
 # a little bit of setting up and clicking around, then the loop takes care of
 # the time-consuming bit. I used Ubuntu 14.04 to do this (not on a VM)
 
-vignette('RSelenium-basics')
+vignette("RSelenium-basics", package = "RSelenium")
+vignette("RSelenium-docker", package = "RSelenium")
 # setup broswer and selenium
 library(devtools)
-install_github("ropensci/rselenium")
+#install_github("ropensci/rselenium")
+devtools::install_github("hadley/xml2")
+install.packages("RSelenium")
 library(RSelenium)
+library(xml2)
+
+# need to find a way to run checkforserver() without DOCKER because no Windows 10.
+# or I can add partition and download ubuntu. See here https://www.docker.com/products/docker#/windows
+
+?rsDriver()
+rsDriver(port = 4567L , browser = "chrome", verbose = T)
+
 checkForServer()
 startServer()
 remDr <- remoteDriver()
